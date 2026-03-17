@@ -31,7 +31,7 @@ export default function Footer() {
             >
               <Mail size={18} /> Email
             </PrismButton>
-            <PrismButton href={PERSONAL.resumePath} variant="primary">
+            <PrismButton href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${PERSONAL.resumePath}`} variant="primary">
               <Download size={18} /> Resume
             </PrismButton>
           </div>
