@@ -28,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
-        className={`${bricolage.variable} ${instrumentSans.variable} ${plexMono.variable} font-body antialiased bg-substrate text-ink`}
+        className={`${bricolage.variable} ${instrumentSans.variable} ${plexMono.variable} font-body antialiased bg-paper text-ink`}
       >
         {children}
       </body>

@@ -2,18 +2,18 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { PERSONAL } from '@/lib/constants';
 import { getLenis } from '@/lib/lenis';
-import WaferHero from './WaferHero';
+import LoopHero from './LoopHero';
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
 
-  const scrollToFab = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const scrollToWork = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const target = document.querySelector('#fab');
+    const target = document.querySelector('#work');
     if (!target) return;
     const lenis = getLenis();
     if (lenis) {
-      lenis.scrollTo(target as HTMLElement, { offset: -64 });
+      lenis.scrollTo(target as HTMLElement, { offset: -72 });
     } else {
       (target as HTMLElement).scrollIntoView({ behavior: 'smooth' });
     }
@@ -29,17 +29,17 @@ export default function Hero() {
         };
 
   return (
-    <section id="top" className="min-h-screen flex items-center pt-24 pb-16">
+    <section id="top" className="min-h-screen flex items-center pt-24 pb-12">
       <div className="shell w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-6 items-center">
           <div>
-            <motion.p {...enter(0.1)} className="eyebrow mb-8">
-              Tessolve Semiconductors · GenAI Engineer
+            <motion.p {...enter(0.1)} className="kicker mb-7">
+              GenAI engineer at Tessolve Semiconductors
             </motion.p>
 
             <motion.h1
-              {...enter(0.25)}
-              className="font-display font-extrabold text-display-xl mb-8"
+              {...enter(0.22)}
+              className="font-display font-extrabold text-display-xl mb-7"
             >
               Adarsh
               <br />
@@ -47,28 +47,30 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              {...enter(0.4)}
-              className="text-body-lg text-muted max-w-xl mb-4"
+              {...enter(0.36)}
+              className="text-body-lg text-muted max-w-xl mb-3"
             >
-              {PERSONAL.tagline}.
+              I build AI agents and workflow automation that loop until the
+              work is done — turning weeks of manual engineering into a day of
+              waiting.
             </motion.p>
 
-            <motion.p
-              {...enter(0.5)}
-              className="font-mono text-sm text-copper mb-10"
-            >
-              Yield is never 100%. I ship anyway.
+            <motion.p {...enter(0.46)} className="text-body-lg max-w-xl mb-10">
+              First iterations look foolish.{' '}
+              <span className="font-semibold text-volt">
+                Converge anyway.
+              </span>
             </motion.p>
 
-            <motion.div {...enter(0.6)} className="flex flex-wrap gap-4">
-              <a href="#fab" onClick={scrollToFab} className="btn-fab btn-fab--primary">
-                View the fab log ↓
+            <motion.div {...enter(0.58)} className="flex flex-wrap gap-4">
+              <a href="#work" onClick={scrollToWork} className="btn btn--primary">
+                See the work ↓
               </a>
               <a
                 href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${PERSONAL.resumePath}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-fab"
+                className="btn"
               >
                 Resume ↗
               </a>
@@ -79,21 +81,14 @@ export default function Hero() {
             {...(reduceMotion
               ? {}
               : {
-                  initial: { opacity: 0, scale: 0.96 },
+                  initial: { opacity: 0, scale: 0.97 },
                   animate: { opacity: 1, scale: 1 },
-                  transition: { duration: 0.9, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] as const },
+                  transition: { duration: 0.9, delay: 0.35, ease: [0.25, 0.1, 0.25, 1] as const },
                 })}
           >
-            <WaferHero />
+            <LoopHero />
           </motion.div>
         </div>
-
-        <motion.div
-          {...enter(1.2)}
-          className="mt-16 font-mono text-[0.65rem] tracking-wider3 uppercase text-faint"
-        >
-          Scroll · Proc 01/06
-        </motion.div>
       </div>
     </section>
   );

@@ -4,11 +4,11 @@ import SmoothScroll from '@/components/effects/SmoothScroll';
 import Header from '@/components/layout/Header';
 import Hero from '@/components/hero/Hero';
 import WhatIBuild from '@/components/sections/WhatIBuild';
-import YieldReport from '@/components/sections/YieldReport';
+import TheNumbers from '@/components/sections/TheNumbers';
 import Manifesto from '@/components/sections/Manifesto';
-import FabLog from '@/components/sections/FabLog';
-import Qual from '@/components/sections/Qual';
-import Traveler from '@/components/sections/Traveler';
+import SelectedWork from '@/components/sections/SelectedWork';
+import CredentialsSection from '@/components/sections/CredentialsSection';
+import AboutSection from '@/components/sections/AboutSection';
 import Footer from '@/components/layout/Footer';
 
 export default function Home() {
@@ -18,11 +18,11 @@ export default function Home() {
       <main>
         <Hero />
         <WhatIBuild />
-        <YieldReport />
+        <TheNumbers />
         <Manifesto />
-        <FabLog />
-        <Qual />
-        <Traveler />
+        <SelectedWork />
+        <CredentialsSection />
+        <AboutSection />
         <Footer />
       </main>
     </SmoothScroll>

@@ -5,22 +5,22 @@ import { Github, Linkedin, Mail, Download } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer id="tapeout" className="section-pad border-t border-line/60">
+    <footer id="contact" className="section-pad border-t border-hairline">
       <div className="shell">
         <FadeInView>
-          <p className="eyebrow mb-8">Proc 06 · Tapeout</p>
+          <p className="kicker mb-7">One more iteration?</p>
         </FadeInView>
 
         <FadeInView delay={0.1}>
           <h2 className="font-display font-bold text-display-lg mb-6 max-w-3xl">
-            Let&apos;s tape out something together.
+            Let&apos;s converge on something good.
           </h2>
         </FadeInView>
 
         <FadeInView delay={0.2}>
           <a
             href={`mailto:${PERSONAL.email}`}
-            className="inline-block font-mono text-sm md:text-base text-copper hover:text-copper-bright transition-colors underline underline-offset-8 decoration-copper/40 mb-14"
+            className="link-volt inline-block font-display font-semibold text-xl md:text-2xl mb-14"
           >
             {PERSONAL.email}
           </a>
@@ -32,37 +32,37 @@ export default function Footer() {
               href={PERSONAL.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-fab"
+              className="btn"
             >
-              <Github size={15} /> GitHub
+              <Github size={16} /> GitHub
             </a>
             <a
               href={PERSONAL.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-fab"
+              className="btn"
             >
-              <Linkedin size={15} /> LinkedIn
+              <Linkedin size={16} /> LinkedIn
             </a>
-            <a href={`mailto:${PERSONAL.email}`} className="btn-fab">
-              <Mail size={15} /> Email
+            <a href={`mailto:${PERSONAL.email}`} className="btn">
+              <Mail size={16} /> Email
             </a>
             <a
               href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${PERSONAL.resumePath}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-fab btn-fab--primary"
+              className="btn btn--primary"
             >
-              <Download size={15} /> Resume
+              <Download size={16} /> Resume
             </a>
           </div>
         </FadeInView>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[0.68rem] tracking-wider2 uppercase text-faint border-t border-line/60 pt-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-muted border-t border-hairline pt-8">
           <p>© 2026 {PERSONAL.name}</p>
-          <p>
-            Fabbed with Next.js · Defects on the map ·{' '}
-            <span className="text-copper">Shipped anyway</span>
+          <p className="font-mono text-xs">
+            built with Next.js · iter <span className="text-volt">∞</span> ·
+            still converging
           </p>
         </div>
       </div>

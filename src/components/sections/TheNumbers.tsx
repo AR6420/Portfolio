@@ -49,7 +49,7 @@ function CountUp({
   );
 }
 
-export default function YieldReport() {
+export default function TheNumbers() {
   const gridRef = useRef<HTMLDivElement>(null!);
   const inView = useInView(gridRef, { once: true, margin: '-80px' });
   const [npmDownloads, setNpmDownloads] = useState(1000);
@@ -66,32 +66,29 @@ export default function YieldReport() {
   }, []);
 
   return (
-    <section id="yield" className="section-pad">
+    <section id="numbers" className="section-pad">
       <div className="shell">
         <SectionHeading
-          step="02"
-          label="Yield"
-          title="Measured, not promised."
-          className="mb-16"
+          kicker="Measured, not promised"
+          title="What the loops delivered."
+          className="mb-14"
         />
 
         <div
           ref={gridRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12"
         >
           {STATS.map((stat, i) => (
-            <FadeInView key={stat.label} delay={i * 0.1} className="bg-substrate">
-              <div className="py-10 px-6 border-t-2 border-copper/70">
-                <div className="font-display font-bold text-display-md mb-3 text-ink">
+            <FadeInView key={stat.label} delay={i * 0.1}>
+              <div className="border-t-[3px] border-ink pt-6">
+                <div className="font-display font-bold text-display-md mb-2">
                   <CountUp
                     value={i === 2 ? npmDownloads : stat.value}
                     suffix={stat.suffix}
                     start={inView}
                   />
                 </div>
-                <p className="font-mono text-[0.7rem] tracking-wider2 uppercase text-muted">
-                  {stat.label}
-                </p>
+                <p className="text-sm text-muted">{stat.label}</p>
               </div>
             </FadeInView>
           ))}

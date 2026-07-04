@@ -1,24 +1,22 @@
 import FadeInView from '@/components/effects/FadeInView';
 
 interface SectionHeadingProps {
-  step: string;
-  label: string;
+  kicker: string;
   title: string;
   className?: string;
 }
 
 export default function SectionHeading({
-  step,
-  label,
+  kicker,
   title,
   className = '',
 }: SectionHeadingProps) {
   return (
     <FadeInView className={className}>
-      <p className="eyebrow mb-5">
-        Proc {step} · {label}
-      </p>
-      <h2 className="font-display font-bold text-display-lg">{title}</h2>
+      <p className="kicker mb-4">{kicker}</p>
+      <h2 className="font-display font-bold text-display-lg max-w-3xl">
+        {title}
+      </h2>
     </FadeInView>
   );
 }
