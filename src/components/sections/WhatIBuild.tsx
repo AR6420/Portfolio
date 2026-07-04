@@ -8,9 +8,9 @@ export default function WhatIBuild() {
         <p className="font-display text-fluid-heading font-semibold leading-relaxed mb-8">
           I build{' '}
           <span className="text-prism">AI systems</span>{' '}
-          that Accelerate{' '}
-          <span className="text-prism">engineering workflows</span>
-          .
+          that iterate, so{' '}
+          <span className="text-prism">engineers</span>{' '}
+          don&apos;t have to.
         </p>
       </FadeInView>
 
@@ -35,7 +35,8 @@ export default function WhatIBuild() {
         <p className="text-fluid-body text-secondary">
           My open-source work extends this philosophy - building frameworks that make
           AI agent orchestration accessible to every developer. The goal is always the
-          same: measurable impact, not just technical novelty.
+          same: measurable impact, not just technical novelty. First iterations always
+          look foolish - <span className="text-prism">I converge anyway</span>.
         </p>
       </FadeInView>
     </div>

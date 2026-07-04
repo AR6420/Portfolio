@@ -5,7 +5,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Adarsh Balanolla - GenAI Engineer',
   description:
-    'GenAI Engineer building AI Agents and Intelligent Systems that Accelerate Engineering Cycles. Specializing in multi-agent systems, RAG, and intelligent automation.',
+    'GenAI Engineer building AI agents and workflow automation that loop until the work is done. Specializing in multi-agent systems, RAG, and intelligent automation.',
   keywords: [
     'GenAI Engineer',
     'AI Agents',

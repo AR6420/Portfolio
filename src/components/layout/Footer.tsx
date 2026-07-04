@@ -13,7 +13,7 @@ export default function Footer() {
 
         <FadeInView>
           <h2 className="font-display text-fluid-heading font-bold mb-8">
-            Let&apos;s Build Something
+            Let&apos;s Converge on Something Good
           </h2>
         </FadeInView>
 
@@ -38,7 +38,7 @@ export default function Footer() {
         </FadeInView>
 
         <div className="text-xs text-tertiary space-y-1">
-          <p>&copy; 2025 {PERSONAL.name}</p>
+          <p>&copy; 2026 {PERSONAL.name}</p>
           <p>Built with Next.js &amp; Three.js</p>
         </div>
       </div>
