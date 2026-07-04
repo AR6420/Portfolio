@@ -8,10 +8,16 @@ export default function Hud() {
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-md">
       <div className="flex items-center gap-4 bg-paper/90 backdrop-blur-md border border-hairline rounded-full px-5 py-2.5 shadow-[0_2px_16px_rgba(20,20,20,0.08)]">
         <span className="font-mono text-[0.7rem] text-muted whitespace-nowrap">
-          iter{' '}
-          <span className="text-ink font-medium">
-            {iter}/{total}
-          </span>
+          {iter === 0 ? (
+            <span className="text-volt font-medium">▶ start the run</span>
+          ) : (
+            <>
+              iter{' '}
+              <span className="text-ink font-medium">
+                {iter}/{total}
+              </span>
+            </>
+          )}
         </span>
 
         <div

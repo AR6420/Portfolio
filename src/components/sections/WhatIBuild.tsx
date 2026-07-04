@@ -30,11 +30,18 @@ function PipelineTask() {
     <div
       className={`mt-12 bg-wash rounded-2xl p-6 md:p-8 ${
         shaking ? 'animate-shake' : ''
-      }`}
+      } ${done ? '' : 'animate-glow ring-1 ring-volt/30'}`}
     >
-      <p className="font-mono text-xs text-volt mb-1">
-        iteration 1 · assemble the pipeline
-      </p>
+      <div className="flex items-center gap-3 mb-1">
+        {!done && (
+          <span className="font-mono text-[0.65rem] font-semibold bg-volt text-white rounded-full px-2.5 py-1">
+            ▶ START HERE
+          </span>
+        )}
+        <p className="font-mono text-xs text-volt">
+          iteration 1 · assemble the pipeline
+        </p>
+      </div>
       <p className="text-sm text-muted mb-5">
         {done
           ? 'Pipeline assembled. The next iteration is unlocked.'

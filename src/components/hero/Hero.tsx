@@ -2,14 +2,16 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { PERSONAL } from '@/lib/constants';
 import { getLenis } from '@/lib/lenis';
+import { useGame } from '@/lib/game';
 import LoopHero from './LoopHero';
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
+  const { finished } = useGame();
 
-  const scrollToWork = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const scrollToStart = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const target = document.querySelector('#work');
+    const target = document.querySelector(finished ? '#work' : '#build');
     if (!target) return;
     const lenis = getLenis();
     if (lenis) {
@@ -62,9 +64,13 @@ export default function Hero() {
               </span>
             </motion.p>
 
-            <motion.div {...enter(0.58)} className="flex flex-wrap gap-4">
-              <a href="#work" onClick={scrollToWork} className="btn btn--primary">
-                See the work ↓
+            <motion.div {...enter(0.58)} className="flex flex-wrap items-center gap-4">
+              <a
+                href={finished ? '#work' : '#build'}
+                onClick={scrollToStart}
+                className="btn btn--primary"
+              >
+                {finished ? 'See the work ↓' : '▶ Start the run'}
               </a>
               <a
                 href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${PERSONAL.resumePath}`}
@@ -74,6 +80,11 @@ export default function Hero() {
               >
                 Resume ↗
               </a>
+              {!finished && (
+                <span className="font-mono text-[0.68rem] text-muted basis-full sm:basis-auto">
+                  this site is played, not scrolled — 6 iterations to converge
+                </span>
+              )}
             </motion.div>
           </div>
 
