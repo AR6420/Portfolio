@@ -61,8 +61,8 @@ export default function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-muted border-t border-hairline pt-8">
           <p>© 2026 {PERSONAL.name}</p>
           <p className="font-mono text-xs">
-            built with Next.js · iter <span className="text-volt">∞</span> ·
-            still converging
+            built with Next.js · shipped at iter{' '}
+            <span className="text-signal">10/20</span> · budget intact
           </p>
         </div>
       </div>
