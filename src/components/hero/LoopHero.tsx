@@ -2,19 +2,19 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * Chaos -> Loop, in three acts.
+ * Chaos -> Loop -> Infinity, in four beats.
  * Act 1 ORCHESTRATE: agents appear scattered, tasks route across a tangled graph.
  * Act 2 LEARN: weak edges fade, nodes drift toward the ring.
  * Act 3 CONVERGE: the surviving loop runs laps; coverage climbs asymptotically,
  * dips included, and settles at 99.4% — never 100. The engineer takes the last bit.
- * Converged idle: the ring slowly rotates, three pulses carry production traffic,
- * nodes ping green heartbeats, and the center keeps the coverage-climb sparkline.
- * The cursor perturbs nearby agents; the loop pulls itself back together.
+ * Act 4 INFINITY: the ring morphs into a lemniscate and a particle stream flows
+ * along it forever — converged, but the iteration never stops.
+ * The cursor perturbs nearby agents; the system pulls itself back together.
  */
 
 const INK = '20, 20, 20';
-const VOLT = '108, 76, 244';
-const SIGNAL = '11, 166, 120';
+const VOLT = [108, 76, 244];
+const SIGNAL = [11, 166, 120];
 const ALARM = '224, 68, 46';
 const HAIR = '216, 211, 200';
 
@@ -23,6 +23,9 @@ const ACT1_MS = 2400;
 const ACT2_MS = 2200;
 const LAP_MS = 3000;
 const FINAL_COVERAGE = 99.4;
+const MORPH_AFTER_MS = 1200; // pause after convergence flash before the ∞ morph
+const MORPH_FADE_MS = 900;
+const PARTICLE_COUNT = 42;
 const PING_EVERY_MS = 1700;
 const PING_LIFE_MS = 900;
 
@@ -34,6 +37,12 @@ function mulberry32(seed: number) {
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function mix(a: number[], b: number[], f: number) {
+  return `${a[0] + (b[0] - a[0]) * f | 0}, ${a[1] + (b[1] - a[1]) * f | 0}, ${
+    a[2] + (b[2] - a[2]) * f | 0
+  }`;
 }
 
 interface Node {
@@ -78,7 +87,6 @@ export default function LoopHero() {
     let nodeR = 0;
     let rafId = 0;
     let start = 0;
-    let rot = 0;
     let lastT = 0;
     let convergeT = 0;
     let lastPingT = 0;
@@ -89,6 +97,7 @@ export default function LoopHero() {
     const pointer = { x: -9999, y: -9999, active: false };
     const history: { t: number; cov: number }[] = [];
     const pings: { node: number; born: number }[] = [];
+    const particles: { s: number; speed: number }[] = [];
 
     const rng = mulberry32(42);
     const nodes: Node[] = [];
@@ -145,13 +154,34 @@ export default function LoopHero() {
           );
           if (!exists) edges.push({ a, b, onRing: false });
         }
+
+        for (let k = 0; k < PARTICLE_COUNT; k++) {
+          particles.push({
+            s: (k / PARTICLE_COUNT) * Math.PI * 2,
+            speed: 0.00045 * (0.8 + rng() * 0.5),
+          });
+        }
       }
     };
 
     const ringTarget = (n: Node): [number, number] => [
-      cx + Math.cos(n.slotAngle + rot) * ringR,
-      cy + Math.sin(n.slotAngle + rot) * ringR,
+      cx + Math.cos(n.slotAngle) * ringR,
+      cy + Math.sin(n.slotAngle) * ringR,
     ];
+
+    // Lemniscate of Bernoulli, widened for presence
+    const lemniscate = (s: number, breath = 1): [number, number] => {
+      const a = ringR * 1.18 * breath;
+      const d = 1 + Math.sin(s) * Math.sin(s);
+      return [
+        cx + (a * Math.cos(s)) / d,
+        cy + (a * 1.25 * Math.sin(s) * Math.cos(s)) / d,
+      ];
+    };
+
+    const infTarget = (n: Node): [number, number] => lemniscate(n.slotAngle);
+
+    const morphT = () => (convergedFlag ? convergeT + MORPH_AFTER_MS : Infinity);
 
     const coverageAt = (t: number) => {
       // Deterministic noisy climb: 38 -> 99.4 with honest dips
@@ -194,16 +224,18 @@ export default function LoopHero() {
       }
     };
 
-    const drawNode = (n: Node, active: boolean) => {
+    const drawNode = (n: Node, active: boolean, alpha = 1) => {
       ctx.beginPath();
       ctx.arc(n.x, n.y, nodeR, 0, Math.PI * 2);
-      ctx.fillStyle = active ? `rgb(${VOLT})` : `rgb(${INK})`;
+      ctx.fillStyle = active
+        ? `rgba(${VOLT.join(',')}, ${alpha})`
+        : `rgba(${INK}, ${alpha})`;
       ctx.fill();
       ctx.beginPath();
       ctx.arc(n.x, n.y, nodeR + 3, 0, Math.PI * 2);
       ctx.strokeStyle = active
-        ? `rgba(${VOLT}, 0.35)`
-        : `rgba(${INK}, 0.12)`;
+        ? `rgba(${VOLT.join(',')}, ${0.35 * alpha})`
+        : `rgba(${INK}, ${0.12 * alpha})`;
       ctx.lineWidth = 1.5;
       ctx.stroke();
     };
@@ -216,7 +248,7 @@ export default function LoopHero() {
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
       ctx.strokeStyle = volt
-        ? `rgba(${VOLT}, ${alpha})`
+        ? `rgba(${VOLT.join(',')}, ${alpha})`
         : `rgba(${HAIR}, ${alpha})`;
       ctx.lineWidth = volt ? 1.8 : 1.2;
       ctx.stroke();
@@ -242,7 +274,7 @@ export default function LoopHero() {
           0,
           Math.PI * 2
         );
-        ctx.fillStyle = `rgba(${VOLT}, ${0.5 - k * 0.075})`;
+        ctx.fillStyle = `rgba(${VOLT.join(',')}, ${0.5 - k * 0.075})`;
         ctx.fill();
       }
       ctx.beginPath();
@@ -253,17 +285,17 @@ export default function LoopHero() {
         0,
         Math.PI * 2
       );
-      ctx.fillStyle = `rgb(${VOLT})`;
+      ctx.fillStyle = `rgb(${VOLT.join(',')})`;
       ctx.fill();
       return e.b;
     };
 
-    const drawSparkline = (t: number) => {
+    const drawSparkline = () => {
       if (history.length < 2) return;
       const w = ringR * 0.95;
       const h = ringR * 0.26;
       const x0 = cx - w / 2;
-      const y0 = cy + (convergedFlag ? 0.02 : -0.1) * ringR;
+      const y0 = cy - h / 2;
       const tMax = history[history.length - 1].t;
 
       ctx.beginPath();
@@ -273,41 +305,16 @@ export default function LoopHero() {
         if (i === 0) ctx.moveTo(px, py);
         else ctx.lineTo(px, py);
       });
-      ctx.strokeStyle = `rgba(${VOLT}, 0.75)`;
+      ctx.strokeStyle = `rgba(${VOLT.join(',')}, 0.6)`;
       ctx.lineWidth = 1.5;
       ctx.lineJoin = 'round';
       ctx.stroke();
 
-      // Live tip
       const last = history[history.length - 1];
-      const tipX = x0 + w;
-      const tipY = y0 + h - ((last.cov - 35) / 65) * h;
       ctx.beginPath();
-      ctx.arc(tipX, tipY, 3, 0, Math.PI * 2);
-      ctx.fillStyle = convergedFlag ? `rgb(${SIGNAL})` : `rgb(${VOLT})`;
+      ctx.arc(x0 + w, y0 + h - ((last.cov - 35) / 65) * h, 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgb(${VOLT.join(',')})`;
       ctx.fill();
-      if (convergedFlag) {
-        // Soft green halo breathing on the tip
-        const breath = 0.5 + 0.5 * Math.sin(t / 500);
-        ctx.beginPath();
-        ctx.arc(tipX, tipY, 5.5 + breath * 2.5, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${SIGNAL}, ${0.35 - breath * 0.2})`;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      }
-    };
-
-    const drawCenter = (t: number) => {
-      drawSparkline(t);
-      if (!convergedFlag) return;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = `600 ${Math.max(14, size * 0.036)}px monospace`;
-      ctx.fillStyle = `rgb(${SIGNAL})`;
-      ctx.fillText('99.4% ✓', cx, cy - size * 0.045);
-      ctx.font = `400 ${Math.max(10, size * 0.02)}px monospace`;
-      ctx.fillStyle = `rgba(${INK}, 0.45)`;
-      ctx.fillText('engineer takes the last bit', cx, cy + ringR * 0.42);
     };
 
     const drawPings = (t: number) => {
@@ -320,10 +327,55 @@ export default function LoopHero() {
         const n = nodes[pings[i].node];
         ctx.beginPath();
         ctx.arc(n.x, n.y, nodeR + 2 + p * 22, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${SIGNAL}, ${0.45 * (1 - p)})`;
+        ctx.strokeStyle = `rgba(${SIGNAL.join(',')}, ${0.45 * (1 - p)})`;
         ctx.lineWidth = 1.5;
         ctx.stroke();
       }
+    };
+
+    // Act 4 — the ∞ stream. Smooth lemniscate path, comet particles flowing,
+    // nodes riding the curve, green heartbeats.
+    const drawInfinity = (t: number, dt: number, fadeIn: number) => {
+      const breath = 1 + 0.015 * Math.sin(t / 1400);
+
+      // Path
+      ctx.beginPath();
+      for (let i = 0; i <= 220; i++) {
+        const [px, py] = lemniscate((i / 220) * Math.PI * 2, breath);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = `rgba(${VOLT.join(',')}, ${0.22 * fadeIn})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Particle stream with comet trails; right lobe drifts green, left stays volt
+      for (const p of particles) {
+        p.s = (p.s + p.speed * dt) % (Math.PI * 2);
+        for (let k = 5; k >= 0; k--) {
+          const s = p.s - k * 0.045;
+          const [px, py] = lemniscate(s, breath);
+          const lobe = (Math.cos(s) + 1) / 2;
+          const col = mix(VOLT, SIGNAL, lobe * 0.8);
+          const crossBoost =
+            Math.abs(Math.cos(s)) < 0.12 ? 0.35 : 0; // flare at the crossover
+          ctx.beginPath();
+          ctx.arc(px, py, (3 - k * 0.38) * (1 + crossBoost), 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${col}, ${(0.5 - k * 0.07 + crossBoost) * fadeIn})`;
+          ctx.fill();
+        }
+      }
+
+      // Text: verdict above, promise below
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `600 ${Math.max(14, size * 0.036)}px monospace`;
+      ctx.fillStyle = `rgba(${SIGNAL.join(',')}, ${fadeIn})`;
+      ctx.fillText('99.4% ✓', cx, cy - ringR * 0.72);
+      ctx.font = `400 ${Math.max(10, size * 0.021)}px monospace`;
+      ctx.fillStyle = `rgba(${INK}, ${0.45 * fadeIn})`;
+      ctx.fillText('iter ∞ — the loop never stops', cx, cy + ringR * 0.72);
     };
 
     const setReadout = (t: number) => {
@@ -358,6 +410,7 @@ export default function LoopHero() {
           convergedFlag = true;
           convergeT = t;
           setConverged(true);
+          if (iterRef.current) iterRef.current.textContent = '∞';
         }
       }
     };
@@ -367,8 +420,8 @@ export default function LoopHero() {
       const dt = lastT ? Math.min(t - lastT, 50) : 16;
       lastT = t;
 
-      // Sample coverage history for the sparkline
-      if (t - lastSampleT > 120 && (!convergedFlag || t < convergeT + 300)) {
+      // Sample coverage history for the live sparkline
+      if (t - lastSampleT > 120 && !convergedFlag) {
         history.push({ t, cov: coverageAt(t) });
         if (history.length > 240) history.shift();
         lastSampleT = t;
@@ -406,7 +459,7 @@ export default function LoopHero() {
             0,
             Math.PI * 2
           );
-          ctx.fillStyle = `rgba(${VOLT}, 0.9)`;
+          ctx.fillStyle = `rgba(${VOLT.join(',')}, 0.9)`;
           ctx.fill();
         }
         nodes.forEach((n) => drawNode(n, false));
@@ -422,26 +475,43 @@ export default function LoopHero() {
           }
         });
         nodes.forEach((n) => drawNode(n, false));
-      } else {
-        // Act 3 — the loop runs laps; after convergence it stays alive:
-        // slow rotation, parallel pulses, green heartbeats
-        if (convergedFlag) rot += dt * 0.0001;
+      } else if (t < morphT()) {
+        // Act 3 — the loop runs laps until coverage converges
         applyPhysics(ringTarget, 0.08);
-
         edges.forEach((e) => {
           if (e.onRing) drawEdge(e, 0.9, true);
         });
 
         const lapT = (t - ACT1_MS - ACT2_MS) / LAP_MS;
-        const activeNodes = new Set<number>();
-        const pulseCount = convergedFlag ? 3 : 1;
-        for (let k = 0; k < pulseCount; k++) {
-          const arrive = drawPulse(lapT + k / pulseCount);
-          if (arrive !== undefined) activeNodes.add(arrive);
+        const arrive = drawPulse(lapT);
+        nodes.forEach((n, i) => drawNode(n, i === arrive));
+
+        drawSparkline();
+
+        // Convergence flash: green ripple from center
+        if (convergedFlag && t - convergeT < 800) {
+          const p = (t - convergeT) / 800;
+          ctx.beginPath();
+          ctx.arc(cx, cy, p * ringR * 1.25, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(${SIGNAL.join(',')}, ${0.4 * (1 - p)})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      } else {
+        // Act 4 — morph into ∞ and stream forever
+        const fadeIn = Math.min(1, (t - morphT()) / MORPH_FADE_MS);
+        applyPhysics(infTarget, 0.05 + fadeIn * 0.04);
+
+        // Old ring edges dissolve as the stream takes over
+        if (fadeIn < 1) {
+          edges.forEach((e) => {
+            if (e.onRing) drawEdge(e, 0.9 * (1 - fadeIn), true);
+          });
         }
 
-        // Green heartbeat pings once converged
-        if (convergedFlag && t - lastPingT > PING_EVERY_MS) {
+        drawInfinity(t, dt, fadeIn);
+
+        if (t - lastPingT > PING_EVERY_MS) {
           pings.push({
             node: Math.floor((t * 7919) / PING_EVERY_MS) % NODE_COUNT,
             born: t,
@@ -450,19 +520,7 @@ export default function LoopHero() {
         }
         drawPings(t);
 
-        nodes.forEach((n, i) => drawNode(n, activeNodes.has(i)));
-
-        // One-time convergence flash: green ripple from center
-        if (convergedFlag && t - convergeT < 800) {
-          const p = (t - convergeT) / 800;
-          ctx.beginPath();
-          ctx.arc(cx, cy, p * ringR * 1.25, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(${SIGNAL}, ${0.4 * (1 - p)})`;
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        }
-
-        drawCenter(t);
+        nodes.forEach((n) => drawNode(n, false));
       }
     };
 
@@ -477,25 +535,32 @@ export default function LoopHero() {
     layout();
 
     if (reduceMotion) {
-      // Static final state: ring formed, converged
+      // Static final state: ∞ formed, converged
+      convergedFlag = true;
+      setConverged(true);
       nodes.forEach((n) => {
-        const [tx, ty] = ringTarget(n);
+        const [tx, ty] = lemniscate(n.slotAngle);
         n.x = tx;
         n.y = ty;
       });
-      convergedFlag = true;
-      setConverged(true);
-      edges.forEach((e) => {
-        if (e.onRing) drawEdge(e, 0.9, true);
-      });
+      ctx.beginPath();
+      for (let i = 0; i <= 220; i++) {
+        const [px, py] = lemniscate((i / 220) * Math.PI * 2);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = `rgba(${VOLT.join(',')}, 0.35)`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
       nodes.forEach((n) => drawNode(n, false));
-      ctx.font = `600 ${Math.max(13, size * 0.032)}px monospace`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = `rgb(${SIGNAL})`;
-      ctx.fillText('99.4% ✓', cx, cy);
+      ctx.font = `600 ${Math.max(13, size * 0.032)}px monospace`;
+      ctx.fillStyle = `rgb(${SIGNAL.join(',')})`;
+      ctx.fillText('99.4% ✓', cx, cy - ringR * 0.72);
       if (covRef.current) covRef.current.textContent = '99.4%';
-      if (iterRef.current) iterRef.current.textContent = '9';
+      if (iterRef.current) iterRef.current.textContent = '∞';
       if (statusRef.current) statusRef.current.textContent = 'converged';
     } else {
       rafId = requestAnimationFrame(tick);
