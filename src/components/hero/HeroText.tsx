@@ -26,8 +26,7 @@ export default function HeroText() {
         className="hero-subtitle font-body text-fluid-body text-secondary max-w-2xl"
         style={{ opacity: 0 }}
       >
-        GenAI Engineer - Building AI agents and workflow automation that loop
-        until the work is done, turning weeks of manual engineering into days
+        GenAI Engineer - Building AI Agents and Intelligent Systems that Accelerate Engineering Cycles
       </p>
 
       {/* Scroll indicator */}
