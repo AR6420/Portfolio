@@ -1,12 +1,23 @@
 'use client';
 import { PERSONAL } from '@/lib/constants';
 import FadeInView from '@/components/effects/FadeInView';
+import { useGame } from '@/lib/game';
 import { Github, Linkedin, Mail, Download } from 'lucide-react';
 
 export default function Footer() {
+  const { finished } = useGame();
+
   return (
     <footer id="contact" className="section-pad border-t border-hairline">
       <div className="shell">
+        {finished && (
+          <FadeInView>
+            <p className="font-mono text-sm text-signal mb-7">
+              run complete · coverage 99.4% ✓ — you just took the last bit
+            </p>
+          </FadeInView>
+        )}
+
         <FadeInView>
           <p className="kicker mb-7">One more iteration?</p>
         </FadeInView>

@@ -2,6 +2,34 @@
 import { ABOUT } from '@/lib/constants';
 import FadeInView from '@/components/effects/FadeInView';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useGame } from '@/lib/game';
+
+function SignoffTask() {
+  const { isDone, complete } = useGame();
+  const done = isDone('signoff');
+
+  return (
+    <div className="mt-12 bg-wash rounded-2xl p-6 md:p-8">
+      <p className="font-mono text-xs text-volt mb-1">
+        iteration 6 · human sign-off
+      </p>
+      <p className="text-sm text-muted mb-5">
+        {done
+          ? 'Signed off. The run is ready to converge — one section left.'
+          : 'Every automated pipeline I build ends the same way: a human approves the result. Your turn.'}
+      </p>
+      <button
+        onClick={() => complete('signoff')}
+        disabled={done}
+        className={`btn ${
+          done ? '!border-signal !text-signal cursor-default' : ''
+        }`}
+      >
+        {done ? '✓ signed off — human in the loop' : 'sign off as the human in the loop'}
+      </button>
+    </div>
+  );
+}
 
 export default function AboutSection() {
   return (
@@ -52,6 +80,10 @@ export default function AboutSection() {
             </FadeInView>
           </div>
         </div>
+
+        <FadeInView delay={0.2}>
+          <SignoffTask />
+        </FadeInView>
       </div>
     </section>
   );

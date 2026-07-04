@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
-import { useInView, useReducedMotion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { STATS } from '@/lib/constants';
 import FadeInView from '@/components/effects/FadeInView';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useGame } from '@/lib/game';
 
 function CountUp({
   value,
@@ -50,8 +51,9 @@ function CountUp({
 }
 
 export default function TheNumbers() {
-  const gridRef = useRef<HTMLDivElement>(null!);
-  const inView = useInView(gridRef, { once: true, margin: '-80px' });
+  const { isDone, complete } = useGame();
+  const done = isDone('stats');
+  const [ran, setRan] = useState<Set<number>>(new Set());
   const [npmDownloads, setNpmDownloads] = useState(1000);
 
   useEffect(() => {
@@ -65,33 +67,69 @@ export default function TheNumbers() {
       .catch(() => {});
   }, []);
 
+  const run = (i: number) => {
+    if (done || ran.has(i)) return;
+    const next = new Set(ran);
+    next.add(i);
+    setRan(next);
+    if (next.size === STATS.length) complete('stats');
+  };
+
   return (
     <section id="numbers" className="section-pad">
       <div className="shell">
         <SectionHeading
           kicker="Measured, not promised"
           title="What the loops delivered."
-          className="mb-14"
+          className="mb-6"
         />
 
-        <div
-          ref={gridRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12"
-        >
-          {STATS.map((stat, i) => (
-            <FadeInView key={stat.label} delay={i * 0.1}>
-              <div className="border-t-[3px] border-ink pt-6">
-                <div className="font-display font-bold text-display-md mb-2">
-                  <CountUp
-                    value={i === 2 ? npmDownloads : stat.value}
-                    suffix={stat.suffix}
-                    start={inView}
-                  />
-                </div>
-                <p className="text-sm text-muted">{stat.label}</p>
-              </div>
-            </FadeInView>
-          ))}
+        <FadeInView delay={0.1}>
+          <p className="font-mono text-xs text-volt mb-14">
+            iteration 2 · run the benchmarks —{' '}
+            {done
+              ? '✓ all four passed'
+              : `click each benchmark to run it (${ran.size}/4)`}
+          </p>
+        </FadeInView>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12">
+          {STATS.map((stat, i) => {
+            const isRun = done || ran.has(i);
+            return (
+              <FadeInView key={stat.label} delay={i * 0.1}>
+                <button
+                  onClick={() => run(i)}
+                  disabled={isRun}
+                  className={`w-full text-left border-t-[3px] pt-6 transition-colors ${
+                    isRun
+                      ? 'border-signal cursor-default'
+                      : 'border-ink hover:border-volt cursor-pointer'
+                  }`}
+                >
+                  <div className="font-display font-bold text-display-md mb-2">
+                    {isRun ? (
+                      <CountUp
+                        value={i === 2 ? npmDownloads : stat.value}
+                        suffix={stat.suffix}
+                        start
+                      />
+                    ) : (
+                      <span className="text-muted">—</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted">{stat.label}</p>
+                  <p
+                    className={`font-mono text-[0.68rem] mt-2 ${
+                      isRun ? 'text-signal' : 'text-volt'
+                    }`}
+                  >
+                    {isRun ? '✓ pass' : '▸ run benchmark'}
+                  </p>
+                </button>
+              </FadeInView>
+            );
+          })}
         </div>
       </div>
     </section>
