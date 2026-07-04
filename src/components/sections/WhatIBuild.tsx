@@ -4,7 +4,7 @@ import FadeInView from '@/components/effects/FadeInView';
 export default function WhatIBuild() {
   return (
     <div className="section-container w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 lg:gap-20 items-start text-left">
+      <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 lg:gap-20 items-center text-left">
         <FadeInView>
           <p className="font-display text-fluid-heading font-semibold leading-tight">
             I build{' '}

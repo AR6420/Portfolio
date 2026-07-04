@@ -25,6 +25,9 @@
 
 html {
   scroll-behavior: auto;
+  /* Reserve equal gutters on both edges so the 6px scrollbar
+     doesn't shift the visual center of every section */
+  scrollbar-gutter: stable both-edges;
 }
 
 body {
