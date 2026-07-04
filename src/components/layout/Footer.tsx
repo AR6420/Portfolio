@@ -1,45 +1,69 @@
 'use client';
 import { PERSONAL } from '@/lib/constants';
-import PrismButton from '@/components/ui/PrismButton';
 import FadeInView from '@/components/effects/FadeInView';
 import { Github, Linkedin, Mail, Download } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="min-h-screen flex items-center section-padding">
-      <div className="section-container text-center">
-        {/* Prismatic divider */}
-        <div className="w-full h-[1px] bg-prism-gradient-horizontal opacity-30 mb-16" />
-
+    <footer id="tapeout" className="section-pad border-t border-line/60">
+      <div className="shell">
         <FadeInView>
-          <h2 className="font-display text-fluid-heading font-bold mb-8">
-            Let&apos;s Build Something
+          <p className="eyebrow mb-8">Proc 06 · Tapeout</p>
+        </FadeInView>
+
+        <FadeInView delay={0.1}>
+          <h2 className="font-display font-bold text-display-lg mb-6 max-w-3xl">
+            Let&apos;s tape out something together.
           </h2>
         </FadeInView>
 
         <FadeInView delay={0.2}>
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <PrismButton href={PERSONAL.github} variant="secondary" external>
-              <Github size={18} /> GitHub
-            </PrismButton>
-            <PrismButton href={PERSONAL.linkedin} variant="secondary" external>
-              <Linkedin size={18} /> LinkedIn
-            </PrismButton>
-            <PrismButton
-              href={`mailto:${PERSONAL.email}`}
-              variant="secondary"
+          <a
+            href={`mailto:${PERSONAL.email}`}
+            className="inline-block font-mono text-sm md:text-base text-copper hover:text-copper-bright transition-colors underline underline-offset-8 decoration-copper/40 mb-14"
+          >
+            {PERSONAL.email}
+          </a>
+        </FadeInView>
+
+        <FadeInView delay={0.3}>
+          <div className="flex flex-wrap gap-4 mb-20">
+            <a
+              href={PERSONAL.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-fab"
             >
-              <Mail size={18} /> Email
-            </PrismButton>
-            <PrismButton href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${PERSONAL.resumePath}`} variant="primary">
-              <Download size={18} /> Resume
-            </PrismButton>
+              <Github size={15} /> GitHub
+            </a>
+            <a
+              href={PERSONAL.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-fab"
+            >
+              <Linkedin size={15} /> LinkedIn
+            </a>
+            <a href={`mailto:${PERSONAL.email}`} className="btn-fab">
+              <Mail size={15} /> Email
+            </a>
+            <a
+              href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${PERSONAL.resumePath}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-fab btn-fab--primary"
+            >
+              <Download size={15} /> Resume
+            </a>
           </div>
         </FadeInView>
 
-        <div className="text-xs text-tertiary space-y-1">
-          <p>&copy; 2025 {PERSONAL.name}</p>
-          <p>Built with Next.js &amp; Three.js</p>
+        <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[0.68rem] tracking-wider2 uppercase text-faint border-t border-line/60 pt-8">
+          <p>© 2026 {PERSONAL.name}</p>
+          <p>
+            Fabbed with Next.js · Defects on the map ·{' '}
+            <span className="text-copper">Shipped anyway</span>
+          </p>
         </div>
       </div>
     </footer>

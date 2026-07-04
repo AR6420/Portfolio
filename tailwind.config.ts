@@ -9,51 +9,35 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        base: {
-          black: '#000000',
-          900: '#0a0a0a',
-          800: '#111111',
-          700: '#1a1a1a',
-          600: '#222222',
+        substrate: '#0C0A10',
+        surface: '#141119',
+        raised: '#1B1723',
+        line: '#282230',
+        copper: {
+          DEFAULT: '#E08D57',
+          bright: '#F4A96C',
+          deep: '#9C4F26',
         },
-        prism: {
-          cyan: '#00f0ff',
-          blue: '#4060ff',
-          violet: '#8040ff',
-          magenta: '#c020e0',
-          rose: '#ff2080',
+        oxide: {
+          teal: '#7FE3D4',
+          violet: '#A995FF',
         },
-        primary: '#ffffff',
-        secondary: '#999999',
-        tertiary: '#666666',
+        defect: '#E4614F',
+        ink: '#EFEAF3',
+        muted: '#9B92A9',
+        faint: '#5F5870',
       },
       fontFamily: {
-        display: ['var(--font-space-grotesk)', 'sans-serif'],
-        body: ['var(--font-outfit)', 'sans-serif'],
-        mono: ['var(--font-jetbrains-mono)', 'monospace'],
+        display: ['var(--font-display)', 'sans-serif'],
+        body: ['var(--font-body)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
-      animation: {
-        'prism-rotate': 'prism-rotate 4s linear infinite',
-        'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
-        'shimmer': 'shimmer 2s linear infinite',
+      letterSpacing: {
+        wider2: '0.2em',
+        wider3: '0.3em',
       },
-      keyframes: {
-        'prism-rotate': {
-          '0%': { '--prism-angle': '0deg' },
-          '100%': { '--prism-angle': '360deg' },
-        },
-        'fade-in-up': {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        'shimmer': {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-      },
-      backgroundImage: {
-        'prism-gradient': 'linear-gradient(135deg, #00f0ff, #4060ff, #8040ff, #c020e0, #ff2080)',
-        'prism-gradient-horizontal': 'linear-gradient(90deg, #00f0ff, #4060ff, #8040ff, #c020e0, #ff2080)',
+      maxWidth: {
+        wafer: '1200px',
       },
     },
   },

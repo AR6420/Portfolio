@@ -1,5 +1,5 @@
 'use client';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -12,10 +12,10 @@ interface FadeInViewProps {
 }
 
 const directionOffset = {
-  up: { y: 40 },
-  down: { y: -40 },
-  left: { x: 40 },
-  right: { x: -40 },
+  up: { y: 32 },
+  down: { y: -32 },
+  left: { x: 32 },
+  right: { x: -32 },
 };
 
 export default function FadeInView({
@@ -26,7 +26,16 @@ export default function FadeInView({
   once = true,
 }: FadeInViewProps) {
   const ref = useRef<HTMLDivElement>(null!);
-  const isInView = useInView(ref, { once, margin: '-50px' });
+  const isInView = useInView(ref, { once, margin: '-60px' });
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return (
+      <div ref={ref} className={cn(className)}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <motion.div
