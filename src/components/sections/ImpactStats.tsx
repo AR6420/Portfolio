@@ -17,12 +17,13 @@ export default function ImpactStats() {
   }, []);
 
   return (
-    <div className="w-full mt-12">
+    <div className="w-full mt-16">
       <div className="section-container">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
           {STATS.map((stat, i) => (
             <FadeInView key={stat.label} delay={i * 0.1}>
-              <div className="text-center">
+              <div className="text-left">
+                <div className="h-[3px] w-full bg-prism-gradient-horizontal opacity-70 mb-6" />
                 <div className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
                   <AnimatedCounter
                     value={i === 2 ? npmDownloads : stat.value}

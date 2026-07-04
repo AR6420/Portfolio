@@ -1,7 +1,7 @@
 'use client';
 import { CERTIFICATIONS } from '@/lib/constants';
 import FadeInView from '@/components/effects/FadeInView';
-import PrismCard from '@/components/ui/PrismCard';
+import SpotlightCard from '@/components/ui/SpotlightCard';
 import { ExternalLink, Award } from 'lucide-react';
 
 export default function Credentials() {
@@ -24,7 +24,7 @@ export default function Credentials() {
                 className="block h-full group"
                 data-cursor-hover
               >
-                <PrismCard
+                <SpotlightCard
                   className="h-full"
                   alwaysGlow={cert.featured}
                 >
@@ -54,7 +54,7 @@ export default function Credentials() {
                       className="mt-3 text-white/20 group-hover:text-white/60 transition-colors"
                     />
                   </div>
-                </PrismCard>
+                </SpotlightCard>
               </a>
             </FadeInView>
           ))}
